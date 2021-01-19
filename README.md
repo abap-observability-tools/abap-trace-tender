@@ -1,1 +1,3 @@
 # abap-trace-tender
+
+Just an idea for now. More hopefully in the future...
