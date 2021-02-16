@@ -1,0 +1,24 @@
+CLASS zcl_att_span DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+
+    METHODS add_span
+      RETURNING VALUE(span) TYPE REF TO zcl_att_span.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+
+ENDCLASS.
+
+
+
+CLASS zcl_att_span IMPLEMENTATION.
+
+  METHOD add_span.
+
+  ENDMETHOD.
+
+ENDCLASS.
