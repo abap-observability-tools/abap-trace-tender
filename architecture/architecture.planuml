@@ -1,0 +1,16 @@
+@startuml architecture
+
+node "program/function" {
+  [trace instrumentation] --> [trace converter]
+  [trace converter] --> [trace connector]
+} 
+
+[customizing] --> [trace converter]
+[customizing] --> [trace connector]
+
+[trace connector] --> [Grafana Tempo]
+[trace connector] --> [Jaeger]
+[trace connector] ..> [Additional tracing systems]
+
+
+@enduml
