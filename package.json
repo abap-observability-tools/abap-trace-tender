@@ -1,0 +1,24 @@
+{
+  "name": "abap-trace-tender",
+  "version": "0.0.1",
+  "description": "For instrumenting programs and send traces to a tracing platform",
+  "scripts": {
+    "test": "abaplint",
+    "overrideChangelog": "gren changelog --override"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abap-observability-tools/abap-trace-tender.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abap-observability-tools/abap-trace-tender/issues"
+  },
+  "homepage": "https://github.com/abap-observability-tools/abap-trace-tender#readme",
+  "devDependencies": {
+    "@abaplint/cli": "^2.69.3",
+    "github-release-notes": "^0.17.3"
+  }
+}
