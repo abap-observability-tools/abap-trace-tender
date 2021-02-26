@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/abap-observability-tools/abap-trace-tender#readme",
   "devDependencies": {
-    "@abaplint/cli": "^2.69.3",
+    "@abaplint/cli": "^2.69.4",
     "github-release-notes": "^0.17.3"
   }
 }
