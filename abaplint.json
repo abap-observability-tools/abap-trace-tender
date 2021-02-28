@@ -26,11 +26,6 @@
             "exclude": [],
             "severity": "Error"
         },
-        "abapdoc": {
-            "exclude": [],
-            "severity": "Error",
-            "checkLocal": false
-        },
         "allowed_object_naming": {
             "exclude": [],
             "severity": "Error"
@@ -709,11 +704,6 @@
             "severity": "Error"
         },
         "unused_types": {
-            "exclude": [],
-            "severity": "Error",
-            "skipNames": []
-        },
-        "unused_variables": {
             "exclude": [],
             "severity": "Error",
             "skipNames": []
