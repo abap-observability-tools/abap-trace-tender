@@ -1,4 +1,4 @@
-interface ZIF_ATT_TRACE_CONNECTOR
-  public .
+INTERFACE zif_att_trace_connector
+  PUBLIC .
 
-endinterface.
+ENDINTERFACE.
