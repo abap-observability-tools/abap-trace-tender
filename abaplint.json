@@ -26,11 +26,6 @@
             "exclude": [],
             "severity": "Error"
         },
-        "abapdoc": {
-            "exclude": [],
-            "severity": "Error",
-            "checkLocal": false
-        },
         "allowed_object_naming": {
             "exclude": [],
             "severity": "Error"
@@ -419,16 +414,6 @@
             "exclude": [],
             "severity": "Error"
         },
-        "local_variable_names": {
-            "exclude": [],
-            "severity": "Error",
-            "patternKind": "required",
-            "ignoreNames": [],
-            "ignorePatterns": [],
-            "expectedData": "^L._.+$",
-            "expectedConstant": "^LC_.+$",
-            "expectedFS": "^<L._.+>$"
-        },
         "main_file_contents": {
             "exclude": [],
             "severity": "Error"
@@ -463,18 +448,6 @@
         "method_overwrites_builtin": {
             "exclude": [],
             "severity": "Error"
-        },
-        "method_parameter_names": {
-            "exclude": [],
-            "severity": "Error",
-            "patternKind": "required",
-            "ignoreNames": [],
-            "ignorePatterns": [],
-            "ignoreExceptions": true,
-            "importing": "^I._.+$",
-            "returning": "^R._.+$",
-            "changing": "^C._.+$",
-            "exporting": "^E._.+$"
         },
         "mix_returning": {
             "exclude": [],
@@ -709,11 +682,6 @@
             "severity": "Error"
         },
         "unused_types": {
-            "exclude": [],
-            "severity": "Error",
-            "skipNames": []
-        },
-        "unused_variables": {
             "exclude": [],
             "severity": "Error",
             "skipNames": []
