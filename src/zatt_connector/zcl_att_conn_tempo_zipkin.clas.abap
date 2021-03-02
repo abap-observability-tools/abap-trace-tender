@@ -22,7 +22,7 @@ CLASS zcl_att_conn_tempo_zipkin IMPLEMENTATION.
     DATA(tempo_zipkin_url) = customizing->get_connector_url( ).
 
 
-      cl_http_client=>create_by_url( EXPORTING
+    cl_http_client=>create_by_url( EXPORTING
                                       url                = CONV #( tempo_zipkin_url )
                                     IMPORTING
                                       client             = DATA(client)
