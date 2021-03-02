@@ -16,9 +16,6 @@ ENDCLASS.
 CLASS zcl_att_conn_tempo_zipkin IMPLEMENTATION.
   METHOD zif_att_trace_connector~connect.
 
-    DATA xjson TYPE xstring.
-    DATA text TYPE string.
-
     DATA(tempo_zipkin_url) = customizing->get_connector_url( ).
 
 
@@ -38,10 +35,8 @@ CLASS zcl_att_conn_tempo_zipkin IMPLEMENTATION.
     client->request->set_method( 'POST' ).
     client->request->set_content_type( 'application/json' ).
 
-    text = converted_trace-json.
-
     TRY.
-        xjson = cl_binary_convert=>string_to_xstring_utf8( iv_string = text ).
+        DATA(xjson) = cl_binary_convert=>string_to_xstring_utf8( iv_string = converted_trace-json ).
       CATCH cx_sy_conversion_error.
         ASSERT 1 = 2.
     ENDTRY.
