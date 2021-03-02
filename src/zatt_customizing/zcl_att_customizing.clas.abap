@@ -40,6 +40,9 @@ CLASS zcl_att_customizing IMPLEMENTATION.
       FROM zatt_config
       INTO @configuration
       WHERE trace_scenario = @scenario.
+    IF sy-subrc <> 0.
+      ASSERT 1 = 2.
+    ENDIF.
 
   ENDMETHOD.
 
