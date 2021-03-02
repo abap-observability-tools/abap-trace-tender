@@ -23,63 +23,54 @@ CLASS zcl_att_conn_tempo_zipkin IMPLEMENTATION.
 
 
     cl_http_client=>create_by_url( EXPORTING
-                                      url                = CONV #( tempo_zipkin_url )
-                                    IMPORTING
-                                      client             = DATA(client)
-                                    EXCEPTIONS
-                                      argument_not_found = 1
-                                      plugin_not_active  = 2
-                                      internal_error     = 3
-                                      OTHERS             = 4 ).
-      IF sy-subrc <> 0.
+                                    url                = CONV #( tempo_zipkin_url )
+                                  IMPORTING
+                                    client             = DATA(client)
+                                  EXCEPTIONS
+                                    argument_not_found = 1
+                                    plugin_not_active  = 2
+                                    internal_error     = 3
+                                    OTHERS             = 4 ).
+    IF sy-subrc <> 0.
+      ASSERT 1 = 2.
+    ENDIF.
+
+    client->request->set_method( 'POST' ).
+    client->request->set_content_type( 'application/json' ).
+
+    text = converted_trace-json.
+
+    TRY.
+        xjson = cl_binary_convert=>string_to_xstring_utf8( iv_string = text ).
+      CATCH cx_sy_conversion_error.
         ASSERT 1 = 2.
-      ENDIF.
+    ENDTRY.
 
-      client->request->set_method( 'POST' ).
-      client->request->set_content_type( 'application/json' ).
+    client->request->set_data( xjson ).
 
-      text = converted_trace-json.
+    client->send(
+      EXCEPTIONS
+        http_communication_failure = 1
+        http_invalid_state         = 2
+        http_processing_failed     = 3
+        http_invalid_timeout       = 4
+        OTHERS                     = 5 ).
+    IF sy-subrc <> 0.
+      ASSERT 1 = 2.
+    ENDIF.
 
-      CALL FUNCTION 'SCMS_STRING_TO_XSTRING'
-        EXPORTING
-          text   = text
-*         mimetype = SPACE
-*         encoding =
-        IMPORTING
-          buffer = xjson
-        EXCEPTIONS
-          failed = 1
-          OTHERS = 2.
-      IF sy-subrc <> 0.
-        MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
-                   WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
-      ENDIF.
-
-      client->request->set_data( xjson ).
-
-      client->send(
-        EXCEPTIONS
-          http_communication_failure = 1
-          http_invalid_state         = 2
-          http_processing_failed     = 3
-          http_invalid_timeout       = 4
-          OTHERS                     = 5 ).
-      IF sy-subrc <> 0.
-        ASSERT 1 = 2.
-      ENDIF.
-
-      client->receive(
-        EXCEPTIONS
-          http_communication_failure = 1
-          http_invalid_state         = 2
-          http_processing_failed     = 3
-          OTHERS                     = 4 ).
-      IF sy-subrc <> 0.
-        client->response->get_status( IMPORTING
-                                          code   = DATA(http_code)
-                                          reason = DATA(reason) ).
-        ASSERT 1 = 2.
-      ENDIF.
+    client->receive(
+      EXCEPTIONS
+        http_communication_failure = 1
+        http_invalid_state         = 2
+        http_processing_failed     = 3
+        OTHERS                     = 4 ).
+    IF sy-subrc <> 0.
+      client->response->get_status( IMPORTING
+                                        code   = DATA(http_code)
+                                        reason = DATA(reason) ).
+      ASSERT 1 = 2.
+    ENDIF.
 
 
   ENDMETHOD.
