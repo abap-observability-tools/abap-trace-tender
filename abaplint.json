@@ -361,10 +361,6 @@
             "exclude": [],
             "severity": "Error"
         },
-        "intf_referencing_clas": {
-            "exclude": [],
-            "severity": "Error"
-        },
         "keep_single_parameter_on_one_line": {
             "exclude": [],
             "severity": "Error",
