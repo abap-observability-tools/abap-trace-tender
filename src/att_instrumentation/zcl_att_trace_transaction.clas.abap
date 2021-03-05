@@ -9,6 +9,9 @@ CLASS zcl_att_trace_transaction DEFINITION
 
     METHODS constructor.
     METHODS get_trace_id RETURNING VALUE(trace_id) TYPE ty_trace_id.
+    METHODS get_root_span
+      RETURNING VALUE(span) TYPE REF TO zcl_att_span.
+    METHODS push_trace.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -36,6 +39,19 @@ CLASS zcl_att_trace_transaction IMPLEMENTATION.
 
   METHOD get_trace_id.
     trace_id = me->trace_id.
+  ENDMETHOD.
+
+  METHOD get_root_span.
+    span = root_span.
+  ENDMETHOD.
+
+  METHOD push_trace.
+
+    DATA(customizing) = NEW zcl_att_customizing_base( scenario = 'example' ).
+    DATA(converter) = customizing->get_converter_class( ).
+
+    DATA(converted_trace) = converter->convert( trace = me
+                                                customizing = customizing ).
   ENDMETHOD.
 
 ENDCLASS.

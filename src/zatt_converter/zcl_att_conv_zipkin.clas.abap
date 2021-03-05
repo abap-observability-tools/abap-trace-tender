@@ -9,6 +9,11 @@ CLASS zcl_att_conv_zipkin DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+
+    METHODS compose_json_from_span
+      IMPORTING span        TYPE REF TO zcl_att_span
+      RETURNING VALUE(json) TYPE string.
+
 ENDCLASS.
 
 
@@ -20,14 +25,27 @@ CLASS zcl_att_conv_zipkin IMPLEMENTATION.
   METHOD zif_att_trace_converter~convert.
 
     DATA(trace_id) = trace->get_trace_id( ).
+    DATA(root_span) = trace->get_root_span( ).
 
-    DATA(zipkin_json) = |[\{| &&
-                           |"id": "dummy",| &&
-                           |"traceId": "{ trace_id }",| &&
-                           |\}]|.
+    DATA(span_json) = compose_json_from_span( root_span ).
+
+    DATA(zipkin_json) = |[\{ { span_json } \}]|.
 
     converted_trace-trace_id = trace_id.
     converted_trace-json = zipkin_json.
+
+
+  ENDMETHOD.
+
+  METHOD compose_json_from_span.
+
+    DATA(spans) = span->get_span_childs( ).
+
+    LOOP AT spans ASSIGNING FIELD-SYMBOL(<span>).
+      DATA(json_tmp) = compose_json_from_span( <span>-span ).
+      json = json && json_tmp.
+    ENDLOOP.
+    json = json && |\{ "span_id": "{ span->get_span_id( ) }"\}|.
 
 *  [{
 * "id": "11123456",
