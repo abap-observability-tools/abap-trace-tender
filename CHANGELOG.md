@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.1 🌈 (07/03/2021)
+## Changes
+## 🧰 Maintenance
+
+- implementation of the zipkin converter started @JohannesKonings (#21)
+- rough implementation of the components @JohannesKonings (#20)
+
+## 🧺 Miscellaneous
+
+- Bump @abaplint/cli from 2.69.7 to 2.69.8 @dependabot (#22)
+- Update Changelog @github-actions (#19)
+
+---
+
 ## v0.1.0 🌈 (02/03/2021)
 ## Changes
 
