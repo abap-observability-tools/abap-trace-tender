@@ -18,15 +18,24 @@ CLASS zcl_att_span DEFINITION
     METHODS constructor.
     METHODS get_span_id
       RETURNING VALUE(span_id) TYPE  ty_span_id.
-    METHODS add_span.
+    METHODS add_span
+      RETURNING VALUE(span) TYPE REF TO zcl_att_span.
     METHODS get_span_childs
       RETURNING VALUE(span_childs) TYPE ty_span_childs.
+    METHODS get_start_and_end
+      EXPORTING
+        timestamp_start TYPE timestamp
+        timestamp_end   TYPE timestamp.
+    METHODS start.
+    METHODS end.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
 
     DATA span_id TYPE ty_span_id.
     DATA span_childs TYPE ty_span_childs.
+    DATA timestamp_start TYPE timestamp.
+    DATA timestamp_end TYPE timestamp.
 
 ENDCLASS.
 
@@ -46,7 +55,7 @@ CLASS zcl_att_span IMPLEMENTATION.
 
   METHOD add_span.
 
-    DATA(span) = NEW zcl_att_span( ).
+    span = NEW zcl_att_span( ).
 
     span_childs = VALUE #( BASE span_childs ( span_id = span->get_span_id( )
                                               span = span ) ).
@@ -59,6 +68,19 @@ CLASS zcl_att_span IMPLEMENTATION.
 
   METHOD get_span_childs.
     span_childs = me->span_childs.
+  ENDMETHOD.
+
+  METHOD get_start_and_end.
+    timestamp_start = me->timestamp_start.
+    timestamp_end = me->timestamp_end.
+  ENDMETHOD.
+
+  METHOD end.
+    GET TIME STAMP FIELD me->timestamp_end.
+  ENDMETHOD.
+
+  METHOD start.
+    GET TIME STAMP FIELD me->timestamp_start.
   ENDMETHOD.
 
 ENDCLASS.

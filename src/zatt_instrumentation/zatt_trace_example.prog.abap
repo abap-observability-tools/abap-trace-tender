@@ -11,8 +11,14 @@ START-OF-SELECTION.
 
   DATA(root_span) = trace_transaction->get_root_span( ).
 
-  root_span->add_span( ).
+  DATA(span1) = root_span->add_span( ).
+  span1->start( ).
+  WAIT UP TO 2 SECONDS.
+  span1->end( ).
 
-  root_span->add_span( ).
+  DATA(span2) = root_span->add_span( ).
+  span2->start( ).
+  WAIT UP TO 4 SECONDS.
+  span2->end( ).
 
   trace_transaction->push_trace( ).
