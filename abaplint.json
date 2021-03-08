@@ -386,11 +386,6 @@
             "exclude": [],
             "severity": "Error"
         },
-        "line_length": {
-            "exclude": [],
-            "severity": "Error",
-            "length": 120
-        },
         "line_only_punc": {
             "exclude": [],
             "severity": "Error",
