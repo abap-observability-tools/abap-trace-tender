@@ -55,11 +55,9 @@ CLASS zcl_att_conv_zipkin IMPLEMENTATION.
       json = json && json_tmp.
     ENDLOOP.
 
-    span->get_start_and_end(
-      IMPORTING
-        timestamp_start = DATA(timestamp_start)
-        timestamp_end   = DATA(timestamp_end)
-    ).
+    span->get_start_and_end( IMPORTING
+                                timestamp_start = DATA(timestamp_start)
+                                timestamp_end   = DATA(timestamp_end) ).
     DATA(span_id) = span->get_span_id( ).
     DATA(timestamp_converted) = convert_timestamp( timestamp_start ).
     DATA(duration) = timestamp_end - timestamp_start.
