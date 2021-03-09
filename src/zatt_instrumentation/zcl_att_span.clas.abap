@@ -15,10 +15,12 @@ CLASS zcl_att_span DEFINITION
 
     TYPES ty_span_childs TYPE STANDARD TABLE OF ty_span_child WITH KEY span_id.
 
-    METHODS constructor.
+    METHODS constructor
+      IMPORTING name TYPE string.
     METHODS get_span_id
       RETURNING VALUE(span_id) TYPE  ty_span_id.
     METHODS add_span
+      IMPORTING name        TYPE string
       RETURNING VALUE(span) TYPE REF TO zcl_att_span.
     METHODS get_span_childs
       RETURNING VALUE(span_childs) TYPE ty_span_childs.
@@ -28,6 +30,8 @@ CLASS zcl_att_span DEFINITION
         timestamp_end   TYPE timestamp.
     METHODS start.
     METHODS end.
+    METHODS get_name
+      RETURNING VALUE(name) TYPE string.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -36,6 +40,7 @@ CLASS zcl_att_span DEFINITION
     DATA span_childs TYPE ty_span_childs.
     DATA timestamp_start TYPE timestamp.
     DATA timestamp_end TYPE timestamp.
+    DATA name TYPE string.
 
 ENDCLASS.
 
@@ -47,6 +52,7 @@ CLASS zcl_att_span IMPLEMENTATION.
 
     TRY.
         me->span_id = cl_system_uuid=>create_uuid_x16_static( ).
+        me->name = name.
       CATCH cx_uuid_error.
         ASSERT 1 = 2.
     ENDTRY.
@@ -55,7 +61,7 @@ CLASS zcl_att_span IMPLEMENTATION.
 
   METHOD add_span.
 
-    span = NEW zcl_att_span( ).
+    span = NEW zcl_att_span( name ).
 
     span_childs = VALUE #( BASE span_childs ( span_id = span->get_span_id( )
                                               span = span ) ).
@@ -81,6 +87,10 @@ CLASS zcl_att_span IMPLEMENTATION.
 
   METHOD start.
     GET TIME STAMP FIELD me->timestamp_start.
+  ENDMETHOD.
+
+  METHOD get_name.
+    name = me->name.
   ENDMETHOD.
 
 ENDCLASS.

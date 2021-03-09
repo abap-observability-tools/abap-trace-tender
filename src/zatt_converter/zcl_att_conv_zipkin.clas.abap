@@ -37,7 +37,7 @@ CLASS zcl_att_conv_zipkin IMPLEMENTATION.
     DATA(span_json) = compose_json_from_span( trace_id = trace_id
                                               span = root_span ).
 
-    DATA(zipkin_json) = |[\{ { span_json } \}]|.
+    DATA(zipkin_json) = |[ { span_json } ]|.
 
     converted_trace-trace_id = trace_id.
     converted_trace-json = zipkin_json.
@@ -55,15 +55,22 @@ CLASS zcl_att_conv_zipkin IMPLEMENTATION.
       json = json && json_tmp.
     ENDLOOP.
 
-    span->get_start_and_end( IMPORTING
-                              timestamp_start = DATA(timestamp_start)
-                              timestamp_end   = DATA(timestamp_end) ).
+    span->get_start_and_end(
+      IMPORTING
+        timestamp_start = DATA(timestamp_start)
+        timestamp_end   = DATA(timestamp_end)
+    ).
+    DATA(span_id) = span->get_span_id( ).
     DATA(timestamp_converted) = convert_timestamp( timestamp_start ).
     DATA(duration) = timestamp_end - timestamp_start.
-    json = json && |\{ "span_id": "{ span->get_span_id( ) }",| &&
+    DATA(name) = span->get_name( ).
+
+
+    json = json && |\{ "span_id": "{ span_id }",| &&
                    |   "traceId": "{ trace_id }",| &&
                    |   "timestamp": "{ timestamp_converted }",| &&
-                   |   "duration": "{ duration }"\}|.
+                   |   "duration": "{ duration }",| &&
+                   |   "name": "{ name }"\},|.
 
 *  [{
 * "id": "11123456",

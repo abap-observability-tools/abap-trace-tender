@@ -7,7 +7,8 @@ CLASS zcl_att_trace_transaction DEFINITION
 
     TYPES ty_trace_id TYPE sysuuid_c32.
 
-    METHODS constructor.
+    METHODS constructor
+      IMPORTING name TYPE string.
     METHODS get_trace_id RETURNING VALUE(trace_id) TYPE ty_trace_id.
     METHODS get_root_span
       RETURNING VALUE(span) TYPE REF TO zcl_att_span.
@@ -33,7 +34,8 @@ CLASS zcl_att_trace_transaction IMPLEMENTATION.
         ASSERT 1 = 2.
     ENDTRY.
 
-    me->root_span = NEW #( ).
+    me->root_span = NEW #( name ).
+    me->root_span->start( ).
 
   ENDMETHOD.
 
@@ -46,6 +48,8 @@ CLASS zcl_att_trace_transaction IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD push_trace.
+
+    me->root_span->end( ).
 
     DATA(customizing) = NEW zcl_att_customizing_base( scenario = 'example' ).
     DATA(converter) = customizing->get_converter_class( ).
