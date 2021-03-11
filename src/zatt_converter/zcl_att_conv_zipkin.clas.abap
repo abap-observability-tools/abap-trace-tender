@@ -11,8 +11,15 @@ CLASS zcl_att_conv_zipkin DEFINITION
   PRIVATE SECTION.
 
     METHODS compose_json_from_span
-      IMPORTING span        TYPE REF TO zcl_att_span
+      IMPORTING
+                trace_id    TYPE zcl_att_trace_transaction=>ty_trace_id
+                span        TYPE REF TO zcl_att_span
       RETURNING VALUE(json) TYPE string.
+    METHODS convert_timestamp
+      IMPORTING
+        timestamp                  TYPE timestamp
+      RETURNING
+        VALUE(converted_timestamp) TYPE string.
 
 ENDCLASS.
 
@@ -27,9 +34,10 @@ CLASS zcl_att_conv_zipkin IMPLEMENTATION.
     DATA(trace_id) = trace->get_trace_id( ).
     DATA(root_span) = trace->get_root_span( ).
 
-    DATA(span_json) = compose_json_from_span( root_span ).
+    DATA(span_json) = compose_json_from_span( trace_id = trace_id
+                                              span = root_span ).
 
-    DATA(zipkin_json) = |[\{ { span_json } \}]|.
+    DATA(zipkin_json) = |[ { span_json } ]|.
 
     converted_trace-trace_id = trace_id.
     converted_trace-json = zipkin_json.
@@ -42,14 +50,29 @@ CLASS zcl_att_conv_zipkin IMPLEMENTATION.
     DATA(spans) = span->get_span_childs( ).
 
     LOOP AT spans ASSIGNING FIELD-SYMBOL(<span>).
-      DATA(json_tmp) = compose_json_from_span( <span>-span ).
+      DATA(json_tmp) = compose_json_from_span( trace_id = trace_id
+                                               span = <span>-span ).
       json = json && json_tmp.
     ENDLOOP.
-    json = json && |\{ "span_id": "{ span->get_span_id( ) }"\}|.
+
+    span->get_start_and_end( IMPORTING
+                                timestamp_start = DATA(timestamp_start)
+                                timestamp_end   = DATA(timestamp_end) ).
+    DATA(span_id) = span->get_span_id( ).
+    DATA(timestamp_converted) = convert_timestamp( timestamp_start ).
+    DATA(duration) = timestamp_end - timestamp_start.
+    DATA(name) = span->get_name( ).
+
+
+    json = json && |\{ "span_id": "{ span_id }",| &&
+                   |   "traceId": "{ trace_id }",| &&
+                   |   "timestamp": { timestamp_converted },| &&
+                   |   "duration": { duration },| &&
+                   |   "name": "{ name }"\},|.
 
 *  [{
 * "id": "11123456",
-* "": "0123456789abcdef",
+* "traceId": "0123456789abcdef",
 * "timestamp": 1608239395286533,
 * "duration": 100000,
 * "name": "span from ABAPTAG1!",
@@ -103,6 +126,21 @@ CLASS zcl_att_conv_zipkin IMPLEMENTATION.
 *      "http.path": "/api"
 *    }
 *  }]
+
+  ENDMETHOD.
+
+
+  METHOD convert_timestamp.
+
+    TRY.
+        DATA(seconds) = cl_abap_timestamp_util=>get_instance( )->tstmpl_seconds_between( iv_timestamp0 = '19700101000000'
+                                                                                         iv_timestamp1 = CONV #( timestamp ) ).
+
+        converted_timestamp = seconds * 1000.
+
+      CATCH cx_parameter_invalid_range.
+        ASSERT 1 = 2.
+    ENDTRY.
 
   ENDMETHOD.
 
