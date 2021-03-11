@@ -66,8 +66,8 @@ CLASS zcl_att_conv_zipkin IMPLEMENTATION.
 
     json = json && |\{ "span_id": "{ span_id }",| &&
                    |   "traceId": "{ trace_id }",| &&
-                   |   "timestamp": "{ timestamp_converted }",| &&
-                   |   "duration": "{ duration }",| &&
+                   |   "timestamp": { timestamp_converted },| &&
+                   |   "duration": { duration },| &&
                    |   "name": "{ name }"\},|.
 
 *  [{
